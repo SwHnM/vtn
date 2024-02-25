@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Issue View</title>
+		<!-- Include Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		/>
+	</head>
+	<body>
+		<div class="container mt-5">
+			<h2 class="mb-4">VTN Tickets</h2>
+			{% for date, issues in issues_by_date.items() %}
+			<div class="card mb-3">
+				<div class="card-header">{{ date }}</div>
+				<div class="card-body">
+					<ul class="list-group">
+						{% for issue in issues %}
+						<li class="list-group-item">
+							<a
+								href="https://servicedesk.isha.in/servicedesk/customer/portal/10/{{ issue.issue_key }}"
+								>{{ issue.issue_key }}</a
+							>
+							- {{ issue.summary }} [{{ issue.status }}]
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+		<!-- Include Bootstrap JS and jQuery -->
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>
