@@ -54,23 +54,35 @@ def login():
     jql_query = "reporter = zhang.huiqing and component = 'Video Thumbnail Only' and status not in (closed,cancelled,Delivered)"
     matching_issues = jira_service.get_issues_from_jql(jql_query)
 
-     # Group issues by due date
+    # Group issues by due date
     issues_by_date = defaultdict(list)
+    due_dates = []  # List to hold the datetime objects for sorting
     for issue in matching_issues:
         due_date = issue['duedate']
         if due_date and due_date != 'None':
             issue_date = datetime.strptime(due_date, "%Y-%m-%d")
-            # Format it into a user-friendly format
-            formatted_date = issue_date.strftime("%d %b %Y")
-            issues_by_date[formatted_date].append(issue)
+            issues_by_date[issue_date].append(issue)  # Use datetime objects as keys
+            due_dates.append(issue_date)  # Store datetime objects for sorting
         else:
-            # Assign issues without a due date to a special key
+            # Special handling for 'No Due Date'
             issues_by_date['No Due Date'].append(issue)
 
-    # Sort the dates, but keep 'No Due Date' at the end
-    sorted_dates = sorted([date for date in issues_by_date.keys() if date != 'No Due Date'])
-    sorted_dates.append('No Due Date')  # Add the 'No Due Date' key at the end of the sorted list
-    sorted_issues_by_date = {date: issues_by_date[date] for date in sorted_dates}
+    # Sort the datetime objects
+    due_dates.sort()
+    
+    # Add the 'No Due Date' key at the end of the sorted dates
+    due_dates.append('No Due Date')
+
+    # Create a new dictionary for the sorted issues with user-friendly date formatting
+    sorted_issues_by_date = {}
+    for issue_date in due_dates:
+        if issue_date == 'No Due Date':
+            # No need to change the format for 'No Due Date' group
+            sorted_issues_by_date[issue_date] = issues_by_date[issue_date]
+        else:
+            # Convert datetime objects to user-friendly strings for use in the template
+            formatted_date = issue_date.strftime("%d %b %Y")
+            sorted_issues_by_date[formatted_date] = issues_by_date[issue_date]
     
     return render_template('issueview.html', issues_by_date=sorted_issues_by_date)
 
