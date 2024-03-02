@@ -51,7 +51,6 @@ def login():
 
     # Create a JIRAService instance
     jira_service = JIRAService(username, password, 'https://servicedesk.isha.in/')
-    # jira_service = JIRAService("epub.jirabot", "Yogi$123", 'https://servicedesk.isha.in/')
     # jira_service = JIRAService(username, password, 'https://servicedesk.isha.in/')
 
     jql_query = '("Request participants" = '+ request.form['username'] + ' or reporter = ' + request.form['username'] + ') and status not in (Closed, Cancelled) and type not in ("Video Shoot Request","Footage Request")'  # JQL query to get issues assigned to the current user

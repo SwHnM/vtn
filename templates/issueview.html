@@ -8,10 +8,27 @@
 			rel="stylesheet"
 			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
 		/>
+		<style>
+			.badge-status {
+				font-size: 100%;
+			}
+			.badge-open {
+				background-color: #dc3545; /* Bootstrap danger color */
+			}
+			.badge-in-progress {
+				background-color: #ffc107; /* Bootstrap warning color */
+			}
+			.badge-delivered {
+				background-color: #28a745; /* Bootstrap success color */
+			}
+			.badge-closed {
+				background-color: #6c757d; /* Bootstrap secondary color */
+			}
+			/* Add more styles for other statuses as needed */
+		</style>
 	</head>
 	<body>
 		<div class="container mt-5">
-			<!-- <h2 class="mb-4">M</h2> -->
 			{% for date, issues in issues_by_date.items() %}
 			<div class="card mb-3">
 				<div class="card-header">{{ date }}</div>
@@ -23,7 +40,10 @@
 								href="https://servicedesk.isha.in/servicedesk/customer/portal/10/{{ issue.issue_key }}"
 								>{{ issue.issue_key }}</a
 							>
-							- {{ issue.summary }} [{{ issue.status }}]
+							- {{ issue.summary }}
+							<span class="badge badge-status badge-{{ issue.status|lower }}"
+								>{{ issue.status }}</span
+							>
 						</li>
 						{% endfor %}
 					</ul>
