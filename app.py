@@ -47,6 +47,7 @@ def index():
 def login():
     username = os.getenv('MY_USERNAME')
     password = os.getenv('MY_PASSWORD')
+    #use env varialbe to store username and password
 
     # Create a JIRAService instance
     jira_service = JIRAService(username, password, 'https://servicedesk.isha.in/')
