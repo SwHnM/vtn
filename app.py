@@ -3,6 +3,8 @@ import os
 from jira import JIRA
 from datetime import datetime
 from collections import defaultdict
+from dotenv import load_dotenv
+load_dotenv() # This will load the environment variables from .env
 
 class JIRAService:
     def __init__(self, username, password, server_url):
@@ -43,15 +45,17 @@ def index():
 
 @app.route('/login', methods=['POST'])
 def login():
-    username = request.form['username']
-    password = request.form['passw']
-    session['username'] = username
-    session['password'] = password
+    username = os.getenv('MY_USERNAME')
+    password = os.getenv('MY_PASSWORD')
 
     # Create a JIRAService instance
     jira_service = JIRAService(username, password, 'https://servicedesk.isha.in/')
+    # jira_service = JIRAService("epub.jirabot", "Yogi$123", 'https://servicedesk.isha.in/')
+    # jira_service = JIRAService(username, password, 'https://servicedesk.isha.in/')
 
-    jql_query = "reporter = zhang.huiqing and component = 'Video Thumbnail Only' and status not in (closed,cancelled,Delivered)"
+    jql_query = '("Request participants" = '+ request.form['username'] + ' or reporter = ' + request.form['username'] + ') and status not in (Closed, Cancelled) and type not in ("Video Shoot Request","Footage Request")'  # JQL query to get issues assigned to the current user
+    # jql_query = '("Request participants" = '+ session['username'] + ' or reporter = ' + session['username'] + ') and status not in (Closed, Cancelled) and type not in ("Video Shoot Request","Footage Request")'  # JQL query to get issues assigned to the current user
+    # jql_query = "reporter = zhang.huiqing and component = 'Video Thumbnail Only' and status not in (closed,cancelled,Delivered)"
     matching_issues = jira_service.get_issues_from_jql(jql_query)
 
     # Group issues by due date
