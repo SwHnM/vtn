@@ -39,8 +39,12 @@
 			</div>
 		</div>
 		<!-- Loading bar -->
-		<div id="loading" style="display: none">
-			<div class="progress">
+		<div
+			id="loading"
+			style="display: none; width: 100%; text-align: center; margin-top: 10px"
+		>
+			<h5>Loading...</h5>
+			<div class="progress" style="width: 40%; margin: auto; margin-top: 10px">
 				<div
 					class="progress-bar progress-bar-striped progress-bar-animated"
 					role="progressbar"
@@ -53,13 +57,16 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 		<script>
 			document.addEventListener("DOMContentLoaded", function () {
-				// Grab the form
 				var loginForm = document.querySelector("form");
-
-				// Add a submit event listener
 				loginForm.addEventListener("submit", function () {
+					var bodyElement = document.body;
+					var loadingDiv = document.getElementById("loading");
+
 					// Show the loading bar
-					document.getElementById("loading").style.display = "block";
+					loadingDiv.style.display = "block";
+
+					// Change cursor for the entire body to indicate loading
+					bodyElement.style.cursor = "progress";
 
 					// Optionally, disable the submit button to prevent multiple submissions
 					document.querySelector("button[type='submit']").disabled = true;
