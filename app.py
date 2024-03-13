@@ -79,7 +79,7 @@ def login():
 
     myname = request.form['username']
 
-    jql_query = '("Request participants" = '+ myname + ' or reporter = ' + myname + ') and status not in (Closed, Cancelled, Delivered, Resolved) and type not in ("Video Shoot Request","Footage Request","Trim Backup Issue Type")'  # JQL query to get issues relevant to the current user
+    jql_query = '("Request participants" = '+ myname + ' or reporter = ' + myname + ') and status not in (Closed, Cancelled, Delivered, Resolved) and type not in ("Video Shoot Request","Footage Request","Trim Backup Issue Type","Physical Asset Material Issue")'  # JQL query to get issues relevant to the current user
     # jql_query = '("Request participants" = '+ session['username'] + ' or reporter = ' + session['username'] + ') and status not in (Closed, Cancelled) and type not in ("Video Shoot Request","Footage Request")'  # JQL query to get issues assigned to the current user
     # jql_query = "reporter = zhang.huiqing and component = 'Video Thumbnail Only' and status not in (closed,cancelled,Delivered)"
     matching_issues = jira_service.get_issues_from_jql(jql_query)
