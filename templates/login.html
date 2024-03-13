@@ -28,16 +28,7 @@
 										required
 									/>
 								</div>
-								<!-- <div class="form-group">
-									<label for="passw">Password:</label>
-									<input
-										type="password"
-										class="form-control"
-										id="passw"
-										name="passw"
-										required
-									/>
-								</div> -->
+
 								<button type="submit" class="btn btn-primary btn-block">
 									Login
 								</button>
@@ -47,8 +38,33 @@
 				</div>
 			</div>
 		</div>
+		<!-- Loading bar -->
+		<div id="loading" style="display: none">
+			<div class="progress">
+				<div
+					class="progress-bar progress-bar-striped progress-bar-animated"
+					role="progressbar"
+					style="width: 100%"
+				></div>
+			</div>
+		</div>
 		<!-- Include Bootstrap JS and jQuery -->
 		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				// Grab the form
+				var loginForm = document.querySelector("form");
+
+				// Add a submit event listener
+				loginForm.addEventListener("submit", function () {
+					// Show the loading bar
+					document.getElementById("loading").style.display = "block";
+
+					// Optionally, disable the submit button to prevent multiple submissions
+					document.querySelector("button[type='submit']").disabled = true;
+				});
+			});
+		</script>
 	</body>
 </html>

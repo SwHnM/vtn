@@ -16,18 +16,6 @@ class JIRAService:
     def get_issue(self, issue_key):
         return self.jira.issue(issue_key)
 
-    # def get_issues_from_jql(self, jql_str):
-    #     issues = self.jira.search_issues(jql_str)
-    #     issue_list = [
-    #         {
-    #             'issue_key': i.key,
-    #             'summary': i.fields.summary,
-    #             'status': i.fields.status.name,
-    #             'duedate': i.fields.duedate if i.fields.duedate is not None else str(i.fields.customfield_70900)[:10]
-    #         }
-    #         for i in issues
-    #     ]
-    #     return issue_list
     def get_issues_from_jql(self, jql_str):
         block_size = 50
         block_num = 0
