@@ -16,8 +16,33 @@ class JIRAService:
     def get_issue(self, issue_key):
         return self.jira.issue(issue_key)
 
+    # def get_issues_from_jql(self, jql_str):
+    #     issues = self.jira.search_issues(jql_str)
+    #     issue_list = [
+    #         {
+    #             'issue_key': i.key,
+    #             'summary': i.fields.summary,
+    #             'status': i.fields.status.name,
+    #             'duedate': i.fields.duedate if i.fields.duedate is not None else str(i.fields.customfield_70900)[:10]
+    #         }
+    #         for i in issues
+    #     ]
+    #     return issue_list
     def get_issues_from_jql(self, jql_str):
-        issues = self.jira.search_issues(jql_str)
+        block_size = 50
+        block_num = 0
+        all_issues = []
+
+        while True:
+            start_idx = block_num * block_size
+            issues = self.jira.search_issues(jql_str, startAt=start_idx, maxResults=block_size)
+            if len(issues) == 0:
+                # No more issues were found, so we can break from the loop
+                break
+            for issue in issues:
+                all_issues.append(issue)
+            block_num += 1
+        
         issue_list = [
             {
                 'issue_key': i.key,
@@ -25,7 +50,7 @@ class JIRAService:
                 'status': i.fields.status.name,
                 'duedate': i.fields.duedate if i.fields.duedate is not None else str(i.fields.customfield_70900)[:10]
             }
-            for i in issues
+            for i in all_issues
         ]
         return issue_list
 
@@ -51,9 +76,10 @@ def login():
 
     # Create a JIRAService instance
     jira_service = JIRAService(username, password, 'https://servicedesk.isha.in/')
-    # jira_service = JIRAService(username, password, 'https://servicedesk.isha.in/')
 
-    jql_query = '("Request participants" = '+ request.form['username'] + ' or reporter = ' + request.form['username'] + ') and status not in (Closed, Cancelled) and type not in ("Video Shoot Request","Footage Request")'  # JQL query to get issues assigned to the current user
+    myname = request.form['username']
+
+    jql_query = '("Request participants" = '+ myname + ' or reporter = ' + myname + ') and status not in (Closed, Cancelled, Delivered, Resolved) and type not in ("Video Shoot Request","Footage Request","Trim Backup Issue Type")'  # JQL query to get issues relevant to the current user
     # jql_query = '("Request participants" = '+ session['username'] + ' or reporter = ' + session['username'] + ') and status not in (Closed, Cancelled) and type not in ("Video Shoot Request","Footage Request")'  # JQL query to get issues assigned to the current user
     # jql_query = "reporter = zhang.huiqing and component = 'Video Thumbnail Only' and status not in (closed,cancelled,Delivered)"
     matching_issues = jira_service.get_issues_from_jql(jql_query)
